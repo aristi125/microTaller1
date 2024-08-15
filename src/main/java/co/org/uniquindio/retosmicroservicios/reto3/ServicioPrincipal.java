@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 public class ServicioPrincipal {
     public static void main(String[] args) {
         try {
-            HttpServer server = HttpServer.create(new InetSocketAddress(80), 0);
+            HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
             server.createContext("/saludo", new RequestHandler());
             server.createContext("/login", new LoginHandler());
             server.setExecutor(null);

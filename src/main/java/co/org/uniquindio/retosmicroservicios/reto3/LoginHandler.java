@@ -5,7 +5,9 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,7 +16,7 @@ import java.util.Date;
 import java.util.Map;
 
 public class LoginHandler implements HttpHandler {
-    private static final String SECRET_KEY = "mySecretKey"; // Debe ser una clave segura y secreta.
+    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Genera una clave segura
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -36,16 +38,16 @@ public class LoginHandler implements HttpHandler {
                 os.close();
             } else {
                 String response = "Solicitud no válida: Los atributos 'usuario' y 'clave' son obligatorios";
-                exchange.sendResponseHeaders(400, response.length());
+                exchange.sendResponseHeaders(400, response.getBytes(StandardCharsets.UTF_8).length);
                 OutputStream os = exchange.getResponseBody();
-                os.write(response.getBytes());
+                os.write(response.getBytes(StandardCharsets.UTF_8));
                 os.close();
             }
         } else {
             String response = "Método no permitido";
-            exchange.sendResponseHeaders(405, response.length());
+            exchange.sendResponseHeaders(405, response.getBytes(StandardCharsets.UTF_8).length);
             OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes());
+            os.write(response.getBytes(StandardCharsets.UTF_8));
             os.close();
         }
     }
@@ -61,7 +63,7 @@ public class LoginHandler implements HttpHandler {
                 .setIssuer("ingesis.uniquindio.edu.co")
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .signWith(SECRET_KEY)
                 .compact();
     }
 }
