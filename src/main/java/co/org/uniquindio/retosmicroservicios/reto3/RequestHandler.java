@@ -9,10 +9,11 @@ import io.jsonwebtoken.SignatureException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RequestHandler implements HttpHandler {
-    private static final String SECRET_KEY = "mySecretKey"; // Debe ser la misma clave usada para firmar el JWT
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -63,13 +64,14 @@ public class RequestHandler implements HttpHandler {
 
     private Claims validateJwt(String jwt) {
         return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(JwtConfig.SECRET_KEY)
                 .parseClaimsJws(jwt)
                 .getBody();
     }
 
     private Map<String, String> parseQueryParams(String query) {
-        // El código existente para analizar los parámetros de la query
-        return Map.of(); // Implementa tu código para analizar la query como antes
+        return Arrays.stream(query.split("&"))
+                .map(param -> param.split("="))
+                .collect(Collectors.toMap(p -> p[0], p -> p[1]));
     }
 }

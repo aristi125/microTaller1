@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
 public class ServicioPrincipal {
     public static void main(String[] args) {
         try {
-            HttpServer server = HttpServer.create(new InetSocketAddress(80), 0);
+            HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
             server.createContext("/saludo", new RequestHandler());
             server.setExecutor(null);
             System.out.println("Servidor iniciado en el puerto 80...");

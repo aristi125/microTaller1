@@ -60,6 +60,7 @@ public class LoginHandler implements HttpHandler {
 
         return Jwts.builder()
                 .setSubject(usuario)
+                .setHeaderParam("type", "JWT")
                 .setIssuer("ingesis.uniquindio.edu.co")
                 .setIssuedAt(now)
                 .setExpiration(exp)
