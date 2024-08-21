@@ -1,0 +1,18 @@
+services:
+  servidor:
+    image: contenedorjavaservidor
+    ports:
+      - "8082:8082"
+    networks:
+      - mynetwork
+
+  cliente:
+    image: contenedorpycliente
+    environment:
+      - AUTH_URL=http://servidor:8082/login
+      - GREETING_URL=http://servidor:8082/saludo
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
